@@ -1,0 +1,360 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ArmyTechTaskModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Branches">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BranchName" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="CityID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Cashier">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CashierName" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="BranchID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Cities">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CityName" Type="nvarchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="InvoiceDetails">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="InvoiceHeaderID" Type="bigint" Nullable="false" />
+          <Property Name="ItemName" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="ItemCount" Type="float" Nullable="false" />
+          <Property Name="ItemPrice" Type="float" Nullable="false" />
+        </EntityType>
+        <EntityType Name="InvoiceHeader">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerName" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Invoicedate" Type="datetime" Nullable="false" />
+          <Property Name="CashierID" Type="int" />
+          <Property Name="BranchID" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Branches_Cities">
+          <End Role="Cities" Type="Self.Cities" Multiplicity="1" />
+          <End Role="Branches" Type="Self.Branches" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cities">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Branches">
+              <PropertyRef Name="CityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cashier_Branches">
+          <End Role="Branches" Type="Self.Branches" Multiplicity="1" />
+          <End Role="Cashier" Type="Self.Cashier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branches">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Cashier">
+              <PropertyRef Name="BranchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceDetails_InvoiceHeader">
+          <End Role="InvoiceHeader" Type="Self.InvoiceHeader" Multiplicity="1" />
+          <End Role="InvoiceDetails" Type="Self.InvoiceDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InvoiceHeader">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="InvoiceDetails">
+              <PropertyRef Name="InvoiceHeaderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceHeader_Branches">
+          <End Role="Branches" Type="Self.Branches" Multiplicity="1" />
+          <End Role="InvoiceHeader" Type="Self.InvoiceHeader" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branches">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="InvoiceHeader">
+              <PropertyRef Name="BranchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceHeader_Cashier">
+          <End Role="Cashier" Type="Self.Cashier" Multiplicity="0..1" />
+          <End Role="InvoiceHeader" Type="Self.InvoiceHeader" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cashier">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="InvoiceHeader">
+              <PropertyRef Name="CashierID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ArmyTechTaskModelStoreContainer">
+          <EntitySet Name="Branches" EntityType="Self.Branches" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cashier" EntityType="Self.Cashier" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cities" EntityType="Self.Cities" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="InvoiceDetails" EntityType="Self.InvoiceDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="InvoiceHeader" EntityType="Self.InvoiceHeader" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Branches_Cities" Association="Self.FK_Branches_Cities">
+            <End Role="Cities" EntitySet="Cities" />
+            <End Role="Branches" EntitySet="Branches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cashier_Branches" Association="Self.FK_Cashier_Branches">
+            <End Role="Branches" EntitySet="Branches" />
+            <End Role="Cashier" EntitySet="Cashier" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceDetails_InvoiceHeader" Association="Self.FK_InvoiceDetails_InvoiceHeader">
+            <End Role="InvoiceHeader" EntitySet="InvoiceHeader" />
+            <End Role="InvoiceDetails" EntitySet="InvoiceDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceHeader_Branches" Association="Self.FK_InvoiceHeader_Branches">
+            <End Role="Branches" EntitySet="Branches" />
+            <End Role="InvoiceHeader" EntitySet="InvoiceHeader" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceHeader_Cashier" Association="Self.FK_InvoiceHeader_Cashier">
+            <End Role="Cashier" EntitySet="Cashier" />
+            <End Role="InvoiceHeader" EntitySet="InvoiceHeader" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ArmyTechTaskModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Branches">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BranchName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CityID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Cities" Relationship="Self.FK_Branches_Cities" FromRole="Branches" ToRole="Cities" />
+          <NavigationProperty Name="Cashier" Relationship="Self.FK_Cashier_Branches" FromRole="Branches" ToRole="Cashier" />
+          <NavigationProperty Name="InvoiceHeader" Relationship="Self.FK_InvoiceHeader_Branches" FromRole="Branches" ToRole="InvoiceHeader" />
+        </EntityType>
+        <EntityType Name="Cashier">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CashierName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BranchID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Branches" Relationship="Self.FK_Cashier_Branches" FromRole="Cashier" ToRole="Branches" />
+          <NavigationProperty Name="InvoiceHeader" Relationship="Self.FK_InvoiceHeader_Cashier" FromRole="Cashier" ToRole="InvoiceHeader" />
+        </EntityType>
+        <EntityType Name="Cities">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CityName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Branches" Relationship="Self.FK_Branches_Cities" FromRole="Cities" ToRole="Branches" />
+        </EntityType>
+        <EntityType Name="InvoiceDetails">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="InvoiceHeaderID" Type="Int64" Nullable="false" />
+          <Property Name="ItemName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ItemCount" Type="Double" Nullable="false" />
+          <Property Name="ItemPrice" Type="Double" Nullable="false" />
+          <NavigationProperty Name="InvoiceHeader" Relationship="Self.FK_InvoiceDetails_InvoiceHeader" FromRole="InvoiceDetails" ToRole="InvoiceHeader" />
+        </EntityType>
+        <EntityType Name="InvoiceHeader">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Invoicedate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CashierID" Type="Int32" />
+          <Property Name="BranchID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Branches" Relationship="Self.FK_InvoiceHeader_Branches" FromRole="InvoiceHeader" ToRole="Branches" />
+          <NavigationProperty Name="Cashier" Relationship="Self.FK_InvoiceHeader_Cashier" FromRole="InvoiceHeader" ToRole="Cashier" />
+          <NavigationProperty Name="InvoiceDetails" Relationship="Self.FK_InvoiceDetails_InvoiceHeader" FromRole="InvoiceHeader" ToRole="InvoiceDetails" />
+        </EntityType>
+        <Association Name="FK_Branches_Cities">
+          <End Role="Cities" Type="Self.Cities" Multiplicity="1" />
+          <End Role="Branches" Type="Self.Branches" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cities">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Branches">
+              <PropertyRef Name="CityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cashier_Branches">
+          <End Role="Branches" Type="Self.Branches" Multiplicity="1" />
+          <End Role="Cashier" Type="Self.Cashier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branches">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Cashier">
+              <PropertyRef Name="BranchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceHeader_Branches">
+          <End Role="Branches" Type="Self.Branches" Multiplicity="1" />
+          <End Role="InvoiceHeader" Type="Self.InvoiceHeader" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Branches">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="InvoiceHeader">
+              <PropertyRef Name="BranchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceHeader_Cashier">
+          <End Role="Cashier" Type="Self.Cashier" Multiplicity="0..1" />
+          <End Role="InvoiceHeader" Type="Self.InvoiceHeader" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cashier">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="InvoiceHeader">
+              <PropertyRef Name="CashierID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceDetails_InvoiceHeader">
+          <End Role="InvoiceHeader" Type="Self.InvoiceHeader" Multiplicity="1" />
+          <End Role="InvoiceDetails" Type="Self.InvoiceDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InvoiceHeader">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="InvoiceDetails">
+              <PropertyRef Name="InvoiceHeaderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ArmyTechTaskEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Branches" EntityType="Self.Branches" />
+          <EntitySet Name="Cashier" EntityType="Self.Cashier" />
+          <EntitySet Name="Cities" EntityType="Self.Cities" />
+          <EntitySet Name="InvoiceDetails" EntityType="Self.InvoiceDetails" />
+          <EntitySet Name="InvoiceHeader" EntityType="Self.InvoiceHeader" />
+          <AssociationSet Name="FK_Branches_Cities" Association="Self.FK_Branches_Cities">
+            <End Role="Cities" EntitySet="Cities" />
+            <End Role="Branches" EntitySet="Branches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cashier_Branches" Association="Self.FK_Cashier_Branches">
+            <End Role="Branches" EntitySet="Branches" />
+            <End Role="Cashier" EntitySet="Cashier" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceHeader_Branches" Association="Self.FK_InvoiceHeader_Branches">
+            <End Role="Branches" EntitySet="Branches" />
+            <End Role="InvoiceHeader" EntitySet="InvoiceHeader" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceHeader_Cashier" Association="Self.FK_InvoiceHeader_Cashier">
+            <End Role="Cashier" EntitySet="Cashier" />
+            <End Role="InvoiceHeader" EntitySet="InvoiceHeader" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceDetails_InvoiceHeader" Association="Self.FK_InvoiceDetails_InvoiceHeader">
+            <End Role="InvoiceHeader" EntitySet="InvoiceHeader" />
+            <End Role="InvoiceDetails" EntitySet="InvoiceDetails" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ArmyTechTaskModelStoreContainer" CdmEntityContainer="ArmyTechTaskEntities">
+          <EntitySetMapping Name="Branches">
+            <EntityTypeMapping TypeName="ArmyTechTaskModel.Branches">
+              <MappingFragment StoreEntitySet="Branches">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="BranchName" ColumnName="BranchName" />
+                <ScalarProperty Name="CityID" ColumnName="CityID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cashier">
+            <EntityTypeMapping TypeName="ArmyTechTaskModel.Cashier">
+              <MappingFragment StoreEntitySet="Cashier">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CashierName" ColumnName="CashierName" />
+                <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cities">
+            <EntityTypeMapping TypeName="ArmyTechTaskModel.Cities">
+              <MappingFragment StoreEntitySet="Cities">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InvoiceDetails">
+            <EntityTypeMapping TypeName="ArmyTechTaskModel.InvoiceDetails">
+              <MappingFragment StoreEntitySet="InvoiceDetails">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="InvoiceHeaderID" ColumnName="InvoiceHeaderID" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="ItemCount" ColumnName="ItemCount" />
+                <ScalarProperty Name="ItemPrice" ColumnName="ItemPrice" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InvoiceHeader">
+            <EntityTypeMapping TypeName="ArmyTechTaskModel.InvoiceHeader">
+              <MappingFragment StoreEntitySet="InvoiceHeader">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="Invoicedate" ColumnName="Invoicedate" />
+                <ScalarProperty Name="CashierID" ColumnName="CashierID" />
+                <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,89 @@
+﻿@model IEnumerable<ArmyTechTask.Models.Branches>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>List Branches</h2>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<div class="modal fade" id="DeleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirm</h4>
+            </div>
+            <div class="modal-body">
+                <h3>Are you sure you wont to Delete this Branch?</h3>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group">
+                    <a href="#" id="btnDelete" class="btn btn-primary">Delete</a>
+                    <a href="#" id="btncancelconfirm" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.BranchName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Cities.CityName)
+        </th>
+        <th>Actions</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BranchName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cities.CityName)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-primary" }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-default" }) |
+                <a href="#" id="ShowModal" onclick="confirm(@item.ID)" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+
+</table>
+<input type="hidden" id="BranchID" />
+<script>
+    var confirm = function (id) {
+        $("#BranchID").val(id);
+        $("#DeleteModal").modal('show');
+    }
+    $("#btnDelete").click(function () {
+        var _id = $("#BranchID").val();
+        $.ajax({
+            type: "post",
+            url: "/Branches/Delete",
+            data: { id: _id },
+            success: function (result) {
+                if (result) {
+                    $("#DeleteModal").modal("hide");
+                    $("#BranchID").val(null);
+                    window.location.href = "/Branches/Index";
+                } else {
+                    alert("something went wrong while processing your requset ");
+                }
+            }
+        });
+    })
+    $("#btncancelconfirm").click(function () {
+        window.location.href = "/Branches/Index";
+    })
+
+
+</script>
+

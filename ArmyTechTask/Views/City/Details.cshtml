@@ -1,0 +1,26 @@
+﻿@model ArmyTechTask.Models.Cities
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CityName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CityName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }, new { @class = "btn btn-primary" }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

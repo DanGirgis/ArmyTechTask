@@ -1,0 +1,96 @@
+﻿@model IEnumerable<ArmyTechTask.Models.InvoiceDetails>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>List Invoice Details </h2>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<div class="modal fade" id="DeleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirm</h4>
+            </div>
+            <div class="modal-body">
+                <h3>Are you sure you wont to Delete this Invoice Details?</h3>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group">
+                    <a href="#" id="btnDelete" class="btn btn-primary">Delete</a>
+                    <a href="#" id="btncancelconfirm" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.InvoiceHeader.CustomerName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ItemName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ItemCount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ItemPrice)
+        </th>
+        <th>Actions</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.InvoiceHeader.CustomerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemPrice)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-primary" }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-default" }) |
+                <a href="#" id="ShowModal" onclick="confirm(@item.ID)" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+</table>
+<input type="hidden" id="InvoiceDetailID" />
+<script>
+    var confirm = function (id) {
+        $("#InvoiceDetailID").val(id);
+        $("#DeleteModal").modal('show');
+    }
+    $("#btnDelete").click(function () {
+        var _id = $("#InvoiceDetailID").val();
+        $.ajax({
+            type: "post",
+            url: "/InvoiceDetail/Delete",
+            data: { id: _id },
+            success: function (result) {
+                if (result) {
+                    $("#DeleteModal").modal("hide");
+                    $("#InvoiceDetailID").val(null);
+                    window.location.href = "/InvoiceDetail/Index";
+                } else {
+                    alert("something went wrong while processing your requset ");
+                }
+            }
+        });
+    })
+    $("#btncancelconfirm").click(function () {
+        window.location.href = "/InvoiceDetail/Index";
+    })
+</script>

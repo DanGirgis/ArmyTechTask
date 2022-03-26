@@ -1,0 +1,119 @@
+﻿
+@model  ArmyTechTask.Models.VM.InvoiceHeaderWithDetails2Vm
+@{
+    ViewBag.Title = "Details";
+}
+<div class="modal fade" id="DeleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirm</h4>
+            </div>
+            <div class="modal-body">
+                <h3>Are you sure you wont to Delete this City?</h3>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group">
+                    <a href="#" id="btnDelete" class="btn btn-primary">Delete</a>
+                    <a href="#" id="btncancelconfirm" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<table class="table table-bordered table-hover">
+    <tr>
+        <td>customer Name : </td>
+        <td><b>@Model.Invoiceheader.CustomerName</b></td>
+    </tr>
+    <tr>
+        <td>Invoice Date : </td>
+        <td><b>@Model.Invoiceheader.Invoicedate</b></td>
+    </tr>
+    <tr>
+        <td>Cashier : </td>
+        <td><b>@Model.Invoiceheader.Cashier.CashierName</b></td>
+    </tr>
+    <tr>
+        <td>Branch :</td>
+        <td><b>@Model.Invoiceheader.Branches.BranchName</b></td>
+    </tr>
+</table>
+
+
+
+
+
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>
+            <h1>Item Name</h1>
+        </th>
+        <th>
+            <h1>Quantity</h1>
+        </th>
+        <th>
+            <h1>Price</h1>
+        </th>
+
+    </tr>
+
+
+    @foreach (var item in Model.ItemsDetails)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemPrice)
+            </td>
+
+            <td>
+                @*@Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-primary" }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-default" }) |
+                    <a href="#" id="ShowModal" onclick="confirm(@item.ID)" class="btn btn-danger">Delete</a>*@
+            </td>
+        </tr>
+
+    }
+    <tr>
+        <td>TotalPrice</td>
+        <td colspan="4">@Model.TotalPrice</td>
+    </tr>
+</table>
+<input type="hidden" id="InvoiceHeaderID" />
+<script>
+    var confirm = function (id) {
+        $("#InvoiceHeaderID").val(id);
+        $("#DeleteModal").modal('show');
+    }
+    $("#btnDelete").click(function () {
+        var _id = $("#InvoiceHeaderID").val();
+        $.ajax({
+            type: "post",
+            url: "/InvoiceHeader/Delete",
+            data: { id: _id },
+            success: function (result) {
+                if (result) {
+                    $("#DeleteModal").modal("hide");
+                    $("#InvoiceHeaderID").val(null);
+                    window.location.href = "/InvoiceHeader/Index";
+                } else {
+                    alert("something went wrong while processing your requset ");
+                }
+            }
+        });
+    })
+    $("#btncancelconfirm").click(function () {
+        window.location.href = "/InvoiceHeader/Index";
+    })
+</script>

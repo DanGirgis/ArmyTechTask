@@ -1,0 +1,81 @@
+﻿@model IEnumerable<ArmyTechTask.Models.Cities>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>List Cities</h2>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<div class="modal fade" id="DeleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirm</h4>
+            </div>
+            <div class="modal-body">
+                <h3>Are you sure you wont to Delete this City?</h3>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group">
+                    <a href="#" id="btnDelete" class="btn btn-primary">Delete</a>
+                    <a href="#" id="btncancelconfirm" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CityName)
+        </th>
+        <th>Actions</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CityName)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-primary" }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-default" }) |
+                <a href="#" id="ShowModal" onclick="confirm(@item.ID)" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+</table>
+<input type="hidden" id="CityID" />
+<script>
+    var confirm = function (id) {
+        $("#CityID").val(id);
+        $("#DeleteModal").modal('show');
+    }
+    $("#btnDelete").click(function () {
+        var _id = $("#CityID").val();
+        $.ajax({
+            type: "post",
+            url: "/City/Delete",
+            data: { id: _id },
+            success: function (result) {
+                if (result) {
+                    $("#DeleteModal").modal("hide");
+                    $("#CityID").val(null);
+                    window.location.href = "/City/Index";
+                } else {
+                    alert("something went wrong while processing your requset ");
+                }
+            }
+        });
+    })
+    $("#btncancelconfirm").click(function () {
+        window.location.href = "/City/Index";
+    })
+
+
+</script>
+
